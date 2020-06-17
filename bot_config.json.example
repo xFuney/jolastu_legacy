@@ -1,0 +1,13 @@
+{
+    "bot_owner_id": 12345678901234567890,
+    "bot_debug_whitelist": [
+        123456747476467467,
+        196827593945739483,
+        579378374739183938
+    ],
+    "bot_name": "Cat Bot",
+    "bot_prefix": "!",
+    "bot_env": "dev",
+    "bot_image": "https://i.imgur.com/BBcy6Wc.jpg",
+    "music_leaveAfterDone": true
+}
