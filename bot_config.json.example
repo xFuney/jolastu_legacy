@@ -9,5 +9,10 @@
     "bot_prefix": "!",
     "bot_env": "dev",
     "bot_image": "https://i.imgur.com/BBcy6Wc.jpg",
-    "music_leaveAfterDone": true
+    "music_leaveAfterDone": true,
+    "bredo_servermon__enable": true,
+    "bredo_servermon__cpuThreshold": 25,
+    "bredo_servermon__intervalSeconds": 5,
+    "bredo_servermon__sysop": "1983235073250327508",
+    "bredo_servermon__sysop_log_channel": "18214210472107408"
 }

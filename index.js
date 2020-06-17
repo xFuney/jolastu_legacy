@@ -45,6 +45,49 @@ for (const file of commandsDirectory) {
     }
 }
 
+// MONITORING
+
+// CPU Monitoring
+if (BOT_CONFIG.bredo_servermon__enable) {
+    const os = require('os-utils');
+
+    const cpuThreshold = BOT_CONFIG.bredo_servermon__cpuThreshold
+    const intervalSeconds =  BOT_CONFIG.bredo_servermon__intervalSeconds
+    const ownerID =  BOT_CONFIG.bredo_servermon__sysop
+    const channelID =  BOT_CONFIG.bredo_servermon__sysop_log_channel
+
+    let cpuWarning = false
+    let ownerAlerted = false
+
+    function monitorCheck() {
+        let channel = client.channels.cache.get(channelID)
+        os.cpuUsage(function(v) {
+            let currCpuUsage = Math.round(v * 100)
+            if (currCpuUsage > cpuThreshold) {
+                if ((!ownerAlerted) && (cpuWarning)) {
+                    console.log('[MON] High CPU usage has lasted over ' + intervalSeconds + 'seconds, alerting owner')
+                    channel.send('<@' + ownerID + '>, CPU usage has been above threshold of ' + cpuThreshold + '% for more then ' + intervalSeconds + 'seconds (currently at ' + currCpuUsage + '%)')
+                    ownerAlerted = true
+                } else if (!cpuWarning && !ownerAlerted) {
+                    console.log('[MON] High CPU usage detected')
+                    cpuWarning = true
+                } else {
+                    console.log('[MON] CPU usage is still high, owner has been alerted')
+                }
+            } else {
+                if (cpuWarning || ownerAlerted) {
+                    console.log('[MON] CPU usage has returned to normal')
+                    cpuWarning = false
+                    ownerAlerted = false
+                }
+            }
+        });
+    }
+
+    setInterval(monitorCheck, intervalSeconds * 1000)
+}
+
+
 const YTDL_OPTS = {
     maxResults: 3,
     key: process.env.KEY_YT,
