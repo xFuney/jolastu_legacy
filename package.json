@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/xFuney/jolastu/issues"
   },
-  "homepage": "https://github.com/xFuney/jolastu#readme"
+  "homepage": "https://github.com/xFuney/jolastu#readme",
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "discord.js": "^12.2.0",
+    "opus": "0.0.0",
+    "youtube-search-promise": "^1.0.3",
+    "ytdl-core": "^2.1.7"
+  }
 }
