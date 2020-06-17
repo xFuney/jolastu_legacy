@@ -222,6 +222,134 @@ module.exports = {
         }        
     },
     commands: {
+        "disconnect": {
+            pretty_name: "disconnect",
+            description: "Disconnects the bot from the voice channel, regardless of queue.",
+            command_function: async function(message,args,serverQueue,Discord,client,search,ytdl,opts,queue,BOT_CONFIG) {
+                if (!message.member.voice.channel) {
+                    const exampleEmbed = new Discord.MessageEmbed()
+                        .setColor('ff0000')
+                        .setTitle("Cannot disconnect!")
+                        .setAuthor('Fatal Exception', BOT_CONFIG.bot_image)
+                        .setDescription("You must be in a voice channel to disconnect.")
+                        .setTimestamp()
+                        .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
+                        message.channel.send(exampleEmbed)
+                    return false
+                }
+    
+                if (!serverQueue) {
+                    const exampleEmbed = new Discord.MessageEmbed()
+                        .setColor('ff0000')
+                        .setTitle("Cannot disconnect!")
+                        .setAuthor('Fatal Exception', BOT_CONFIG.bot_image)
+                        .setDescription("I'm pretty sure I'm not connected.")
+                        .setTimestamp()
+                        .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
+                        message.channel.send(exampleEmbed)
+                    return false
+                }
+    
+                serverQueue.connection.dispatcher.end();
+                var connection = await VoiceChannel.leave()
+                serverQueue = [];
+    
+                // END OF DISCONNECT //
+            }
+        },
+        "queue": {
+            pretty_name: "queue",
+            description: "View the current queue.",
+            command_function: async function(message, args, serverQueue, Discord, client, search, ytdl, opts, queue, BOT_CONFIG) {
+                if (!serverQueue) {
+                    const exampleEmbed = new Discord.MessageEmbed()
+                        .setColor('ff0000')
+                        .setTitle("Cannot get queue!")
+                        .setAuthor('Fatal Exception', BOT_CONFIG.bot_image)
+                        .setDescription("No queue currently exists for this server. Try playing something first.")
+                        .setTimestamp()
+                        .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
+                        message.channel.send(exampleEmbed)
+                    return false
+                }
+                
+                var i
+                var songQueue = serverQueue.songs
+                var currentDesc = "";
+                if (songQueue.length > 1) {
+                    for (i = 1; i < songQueue.length; i++) {
+                        currentDesc = currentDesc + "**" + i + ".** " + "_ [" + serverQueue.songs[i].title + "](" + serverQueue.songs[i].url + "), requested by " + serverQueue.songs[i].requester + ". _\n"
+                    }
+                } else {
+                    currentDesc = "_No songs in queue._"
+                }
+    
+                const exampleEmbed = new Discord.MessageEmbed()
+                    .setColor('7289da')
+                    .setAuthor('Now Playing', BOT_CONFIG.bot_image)
+                    .setDescription("_[" + serverQueue.songs[0].title + "](" + serverQueue.songs[0].url + "), requested by " + serverQueue.songs[0].requester + "._")
+                    .addField('**Current Queue**', currentDesc, false)
+                    .setTimestamp()
+                    .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
+      
+            
+                message.channel.send(exampleEmbed)
+            }
+        },
+        "np": {
+            pretty_name: "np",
+            description: "Check what is currently playing.",
+            command_function: async function(message, args, serverQueue, Discord, client, search, ytdl, opts, queue, BOT_CONFIG) {
+                if (!serverQueue) {
+                    const exampleEmbed = new Discord.MessageEmbed()
+                        .setColor('ff0000')
+                        .setTitle("Cannot get queue!")
+                        .setAuthor('Fatal Exception', BOT_CONFIG.bot_image)
+                        .setDescription("No queue currently exists for this server. Try playing something first.")
+                        .setTimestamp()
+                        .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
+                        message.channel.send(exampleEmbed)
+                    return false
+                }
+    
+                var song = serverQueue.songs[0]
+                var time = song.length_seconds
+    
+                var hours = Math.floor(time / 3600);
+                time = time - hours * 3600;
+                var minutes = Math.floor(time / 60);
+                var seconds = time - minutes * 60;
+    
+    
+                var finalTime = module.exports.functions.str_pad_left(minutes,'0',2)+':'+module.exports.functions.str_pad_left(seconds,'0',2);
+                const exampleEmbed = new Discord.MessageEmbed()
+                    .setColor('7289da')
+                    .setTitle(song.title)
+                    .setAuthor('Now Playing', BOT_CONFIG.bot_image)
+                    .setDescription(song.description)
+                    .addFields(
+                        {
+                            "name": "Link",
+                            "value": "[" + song.url + "](" + song.url + ")",
+                            "inline": false
+                        },
+                        {
+                            "name": "Requested by",
+                            "value": song.requester,
+                            "inline": true
+                        },
+                        {
+                            "name": "Length",
+                            "value": finalTime,
+                            "inline": true
+                        }
+                    )
+                    .setTimestamp()
+                    .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
+    
+                message.channel.send(exampleEmbed)                
+            }
+        },
         "play": {
             pretty_name: "play",
             description: "Play a youtube link using the bot.",
