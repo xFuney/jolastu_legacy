@@ -1,0 +1,19 @@
+{
+  "name": "jolastu",
+  "version": "0.0.1",
+  "description": "Yet another Discord bot for music and giveaways.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xFuney/jolastu.git"
+  },
+  "author": "xFuney <56867550+xFuney@users.noreply.github.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xFuney/jolastu/issues"
+  },
+  "homepage": "https://github.com/xFuney/jolastu#readme"
+}
