@@ -31,6 +31,26 @@ const ytdl = require("ytdl-core");
 const https = require('https');
 var search = require("youtube-search-promise");
 
+
+const ms = require("ms");
+
+// Requires Manager from discord-giveaways
+const { GiveawaysManager } = require("discord-giveaways");
+// Starts updating currents giveaways
+const manager = new GiveawaysManager(client, {
+    storage: "./giveaways.json",
+    updateCountdownEvery: 10000,
+    default: {
+        botsCanWin: false,
+        exemptPermissions: [ "MANAGE_MESSAGES", "ADMINISTRATOR" ],
+        embedColor: "#FF0000",
+        reaction: "🎉"
+    }
+});
+
+// We now have a giveawaysManager property to access the manager everywhere!
+client.giveawaysManager = manager;
+
 api.logging.log("Initialising commands...")
 
 const commandsDirectory = fs.readdirSync('./cmds').filter(file => file.endsWith('.js'));
@@ -131,7 +151,7 @@ client.on('message', msg => {
                 if (Arguments[0] == commandName) {
                     // Execute
                     console.log("[CMD] Executing...");
-                    currentCmd.command_function(msg, Arguments, queue.get(msg.guild.id), Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands)
+                    currentCmd.command_function(msg, Arguments, queue.get(msg.guild.id), Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands, ms)
                 }
             }
             
