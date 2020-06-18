@@ -115,11 +115,14 @@ const YTDL_OPTS = {
 // Set appropriate tokens variable based on config.
 const DISCORD_TOKEN = process.env.JOLASTU_DEV_DISCORD_TOKEN;
 
-if (BOT_CONFIG.bot_env == "dev") {
-    const DISCORD_TOKEN = process.env.JOLASTU_DEV_DISCORD_TOKEN;
+console.log("Currently using development token");
+
+if (BOT_CONFIG.bot_env == "prod") {
+    const DISCORD_TOKEN = process.env.JOLASTU_PROD_DISCORD_TOKEN;
+    console.log("Using production token.")
 } 
 
-console.log(commands)
+//console.log(commands)
 
 client.on('message', msg => {
     // Regardless if this message is meant for us or not, run it through the antispam.
