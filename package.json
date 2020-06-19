@@ -4,7 +4,7 @@
   "description": "Yet another Discord bot for music and giveaways.",
   "main": "index.js",
   "scripts": {
-    "test": "node ."
+    "start": "node ."
   },
   "repository": {
     "type": "git",

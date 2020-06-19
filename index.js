@@ -113,7 +113,7 @@ const YTDL_OPTS = {
     key: process.env.KEY_YT,
 }
 // Set appropriate tokens variable based on config.
-const DISCORD_TOKEN = process.env.JOLASTU_DEV_DISCORD_TOKEN;
+const DISCORD_TOKEN = process.env.JOLASTU_PROD_DISCORD_TOKEN;
 
 console.log("Currently using development token");
 
