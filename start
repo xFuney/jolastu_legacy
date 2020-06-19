@@ -1,0 +1,80 @@
+#!/bin/bash
+#echo "Starting Jolastu Version $(cat .version)..."
+
+CURVER=$(cat .version)
+EXTVER=$(curl -s https://raw.githubusercontent.com/xFuney/jolastu/main/.version)
+
+#EXTVER="1.0.2"
+
+function BOT_UPDATE {
+	echo "Bot Update."
+	git config pull.rebase false
+	git pull
+	
+	if [ $? -eq 0 ]
+        then
+                echo "Update from GitHub repository was successfull. Continuing with startup..."
+                BOT_START
+        else
+                echo "Update from GitHub failed. This is not a problem with this script. There will probably be additional log information above."
+		exit 1;
+        fi
+
+}
+
+function BOT_START {
+	# echo "Bot start."
+	if [[ -z "${JOLASTU_PROD_DISCORD_TOKEN}" ]]; then
+		echo "You don't have a production token set. If you're running in a development environment, set this to something random.";
+		exit 1;
+	fi
+	
+	if [[ -z "${JOLASTU_DEV_DISCORD_TOKEN}" ]]; then
+		echo "You don't have a development token set. This is not an error producing scenario."
+	fi
+
+	npm run start
+	
+	if [ $? -eq 0 ]
+	then
+    		echo "Bot was exited successfully, assuming this is a restart..."
+    		npm run start
+	else
+    		echo "Bot exited with an error code or was told to shut down. Program exited."
+		exit 1;
+	fi
+
+
+}
+
+# Get options
+
+while getopts f:? opt; do
+	case $opt in
+		f) FORCE=1	;;
+		?) HELP=1	;;
+	esac
+done
+
+if [[ "${HELP}" -eq 1 ]]; then
+	echo "usage: start <operations>"
+	echo "operations:"
+	echo "	start -F ( forces a full update, as if this install was not up-to-date )"
+	echo "	start -? ( displays this help page )"
+	exit;
+fi
+
+echo "Starting Jolastu Version $(cat .version)..."
+
+if [[ "${FORCE}" -eq 1 ]]; then
+        echo "Force argument passed, forcing a full pull from GitHub..."
+        BOT_UPDATE
+fi
+
+if [[ "$CURVER" = "$EXTVER" ]]; then
+	echo "Up to date, starting bot..."
+	BOT_START	
+else
+	echo "Not up to date, starting full update..."
+	BOT_UPDATE
+fi
