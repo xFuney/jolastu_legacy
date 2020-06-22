@@ -51,13 +51,13 @@ module.exports = {
                     .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
                 
                 for (const catName in commands) {
-                    console.log(catName)
+                    //console.log(catName)
                     if (catName == Args[1]) {
                         // This is the category we seek.
-                        console.log("found")
+                        //console.log("found")
                         var i;
                         for (const commandName in commands[catName].commands) {
-                            console.log(commandName)
+                            //console.log(commandName)
                             exampleEmbed.addField(BOT_CONFIG.bot_prefix + commands[catName].commands[commandName].pretty_name, commands[catName].commands[commandName].description, false)
                         }
                     }
