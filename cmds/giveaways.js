@@ -46,11 +46,23 @@ module.exports = {
                     console.log(ArrayRar)
                     var NumberOfWinners = parseInt(args[2]);
                     var CollectedWinners = 0;
-                    while ( CollectedWinners != NumberOfWinners ) {
+                    while ( CollectedWinners !== NumberOfWinners ) {
                         console.log("In while loop")
-                        ArrayWinners[CollectedWinners] = ArrayRar[module.exports.functions.random(0,ArrayNum)]
-                        console.log(ArrayWinners[CollectedWinners])
-                        CollectedWinners++;
+                        let selectedUser = ArrayRar[module.exports.functions.random(0,ArrayNum)]
+
+                        if (!ArrayWinners.includes(selectedUser)) {
+                            ArrayWinners[CollectedWinners] = selectedUser
+                            console.log(ArrayWinners[CollectedWinners])
+                            CollectedWinners++;
+                            console.log("User selected")
+                        } else {
+                            console.log("Duplicate user found, skipping")
+                        }
+
+                        if (CollectedWinners >= NumberOfWinners) {
+                            console.log('winners collected')
+                            break;
+                        }
                     }
                     
                     var Finalmsg = ""
