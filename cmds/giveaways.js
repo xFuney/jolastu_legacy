@@ -52,14 +52,15 @@ module.exports = {
                         console.log(ArrayWinners[CollectedWinners])
                         CollectedWinners++;
                     }
-
+                    
+                    var Finalmsg = ""
                     ArrayWinners.forEach(function(winnerID) {
-                        message.channel.send("<@" + winnerID + ">")
+                        Finalmsg += ("<@" + winnerID + "> ")
                     })
 
                     //var RandomAnalysis = ArrayRar[module.exports.functions.random(0,ArrayNum)]
 
-                    //message.channel.send("<@" + RandomAnalysis + ">")
+                    message.channel.send(Finalmsg)
                     
                     message.channel.send("Analysis was completed, currently in debug so stuff is out to console rn.")
                 } else {
