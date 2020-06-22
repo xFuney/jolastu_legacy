@@ -22,16 +22,16 @@ module.exports = {
                     //return
                 //}
 
-                console.log("Ran.")
+                //console.log("Ran.")
 
                 if ( message.mentions.roles.first() ) {
                     // We have a role mention.
-                    console.log("In.")
+                    //console.log("In.")
                     var sentMessage = message.channel.send("**Analysing...**")
 
                     var MemberObject = message.mentions.roles.first().members
                     
-                    //console.log(MemberObject)
+                    ////console.log(MemberObject)
                     var ArrayNum = 0;
                     var ArrayRar = []
 
@@ -43,24 +43,24 @@ module.exports = {
                     
                     var ArrayWinners = [];
                     
-                    console.log(ArrayRar)
+                    //console.log(ArrayRar)
                     var NumberOfWinners = parseInt(args[2]);
                     var CollectedWinners = 0;
                     while ( CollectedWinners !== NumberOfWinners ) {
-                        console.log("In while loop")
+                        //console.log("In while loop")
                         let selectedUser = ArrayRar[module.exports.functions.random(0,ArrayNum)]
 
                         if (!ArrayWinners.includes(selectedUser)) {
                             ArrayWinners[CollectedWinners] = selectedUser
-                            console.log(ArrayWinners[CollectedWinners])
+                            //console.log(ArrayWinners[CollectedWinners])
                             CollectedWinners++;
-                            console.log("User selected")
+                            //console.log("User selected")
                         } else {
-                            console.log("Duplicate user found, skipping")
+                            //console.log("Duplicate user found, skipping")
                         }
 
                         if (CollectedWinners >= NumberOfWinners) {
-                            console.log('winners collected')
+                            //console.log('winners collected')
                             break;
                         }
                     }
@@ -111,7 +111,7 @@ module.exports = {
                             }
                         }
                     }).then((gData) => {
-                        console.log(gData); // {...} (messageid, end date and more)
+                        //console.log(gData); // {...} (messageid, end date and more)
                     });
                 }
     
