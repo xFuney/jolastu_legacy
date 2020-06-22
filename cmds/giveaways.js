@@ -26,7 +26,7 @@ module.exports = {
                     message.channel.send("Must be a server administrator to use this command (preventing against spam pinging)")
                     return
                 }
-                
+
                 //console.log("Ran.")
 
                 if ( args[1] !== undefined ) {
@@ -92,7 +92,12 @@ module.exports = {
             description: "Start a giveaway.",
             command_function: function (message, args, serverQueue, Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands, ms) {
                 const gArgs = message.content.slice(BOT_CONFIG.bot_prefix.length).trim().split(/ +/g)
-                if (message.author.id == message.guild.ownerID) {
+                if (!message.member.hasPermission('ADMINISTRATOR')) {
+                    message.channel.send("Must be a server administrator to use this command (preventing against spam pinging)")
+                    return
+                }
+                // horrible way to bypass owner check
+                if (true) {
                     client.giveawaysManager.start(message.channel, {
                         time: ms(args[1]),
                         prize: args.slice(3).join(" "),
@@ -129,8 +134,12 @@ module.exports = {
             description: "Reroll a giveaway.",
             command_function: function (message, args, serverQueue, results, ytdl, queue, Discord, client, BOT_CONFIG) {
                 let messageID = args[1];
+                if (!message.member.hasPermission('ADMINISTRATOR')) {
+                    message.channel.send("Must be a server administrator to use this command (preventing against spam pinging)")
+                    return
+                }
 
-                if (message.author.id == message.guild.ownerID) {
+                if (true) {
                     client.giveawaysManager.reroll(messageID).then(() => {
                         message.channel.send("Success! Giveaway rerolled!");
                     }).catch((err) => {
@@ -144,8 +153,12 @@ module.exports = {
             description: "Deletes a giveway.",
             command_function: function (message, args, serverQueue, results, ytdl, queue, Discord, client, BOT_CONFIG) {
                 let messageID = args[1];
+                if (!message.member.hasPermission('ADMINISTRATOR')) {
+                    message.channel.send("Must be a server administrator to use this command (preventing against spam pinging)")
+                    return
+                }
 
-                if (message.author.id == message.guild.ownerID) {
+                if (true) {
                     client.giveawaysManager.delete(messageID).then(() => {
                         message.channel.send("Success! Giveaway deleted!");
                     }).catch((err) => {
