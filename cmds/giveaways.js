@@ -22,6 +22,11 @@ module.exports = {
                     return
                 }
 
+                if (!message.member.hasPermission('ADMINISTRATOR')) {
+                    message.channel.send("Must be a server administrator to use this command (preventing against spam pinging)")
+                    return
+                }
+                
                 //console.log("Ran.")
 
                 if ( args[1] !== undefined ) {
