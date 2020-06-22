@@ -14,24 +14,25 @@ module.exports = {
         "gw-randomping": {
             pretty_name: "gw-randomping",
             description: "Get a random ping from a list of roles, given an ID.",
-            command_function: function (message, args, serverQueue, Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands, ms) {
+            command_function: async function (message, args, serverQueue, Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands, ms) {
                 // Random ping
 
-                //if (args[2] === undefined) { 
-                    //message.channel.send("Must specify number of winners.")
-                    //return
-                //}
+                if (args[2] === undefined) { 
+                    message.channel.send("Must specify number of winners.")
+                    return
+                }
 
                 //console.log("Ran.")
 
-                if ( message.mentions.roles.first() ) {
+                if ( args[1] !== undefined ) {
                     // We have a role mention.
                     //console.log("In.")
-                    var sentMessage = message.channel.send("**Analysing...**")
+                    var sentMessage = await message.channel.send("**Analysing...**")
 
-                    var MemberObject = message.mentions.roles.first().members
+                    //var guild = await message.guild.fetchMembers();
+                    var MemberObject = message.guild.roles.cache.get(args[1]).members
                     
-                    ////console.log(MemberObject)
+                    // console.log( MemberObject )
                     var ArrayNum = 0;
                     var ArrayRar = []
 
@@ -74,7 +75,7 @@ module.exports = {
 
                     message.channel.send(Finalmsg)
                     
-                    message.channel.send("Analysis was completed, currently in debug so stuff is out to console rn.")
+                    sentMessage.edit("Analysis completed.")
                 } else {
                     message.channel.send("Must provide a proper role mention. Please make sure this role is mentionable (you can make it unmentionable after running this command).")
                 }
