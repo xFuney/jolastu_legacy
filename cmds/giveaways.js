@@ -3,7 +3,71 @@
 module.exports = {
     categoryName: "Giveaways",
     categoryDescription: "Use the bot to do giveaways!",
+    functions: {
+        random: function(min, max) {  
+            return Math.floor(
+              Math.random() * (max - min) + min
+            )
+        }
+    },
     commands: {
+        "gw-randomping": {
+            pretty_name: "gw-randomping",
+            description: "Get a random ping from a list of roles, given an ID.",
+            command_function: function (message, args, serverQueue, Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands, ms) {
+                // Random ping
+
+                //if (args[2] === undefined) { 
+                    //message.channel.send("Must specify number of winners.")
+                    //return
+                //}
+
+                console.log("Ran.")
+
+                if ( message.mentions.roles.first() ) {
+                    // We have a role mention.
+                    console.log("In.")
+                    var sentMessage = message.channel.send("**Analysing...**")
+
+                    var MemberObject = message.mentions.roles.first().members
+                    
+                    //console.log(MemberObject)
+                    var ArrayNum = 0;
+                    var ArrayRar = []
+
+                    MemberObject.forEach(function(test) {
+                        ArrayRar[ArrayNum] = test.user.id;
+
+                        ArrayNum++;
+                    })
+                    
+                    var ArrayWinners = [];
+                    
+                    console.log(ArrayRar)
+                    var NumberOfWinners = parseInt(args[2]);
+                    var CollectedWinners = 0;
+                    while ( CollectedWinners != NumberOfWinners ) {
+                        console.log("In while loop")
+                        ArrayWinners[CollectedWinners] = ArrayRar[module.exports.functions.random(0,ArrayNum)]
+                        console.log(ArrayWinners[CollectedWinners])
+                        CollectedWinners++;
+                    }
+
+                    ArrayWinners.forEach(function(winnerID) {
+                        message.channel.send("<@" + winnerID + ">")
+                    })
+
+                    //var RandomAnalysis = ArrayRar[module.exports.functions.random(0,ArrayNum)]
+
+                    //message.channel.send("<@" + RandomAnalysis + ">")
+                    
+                    message.channel.send("Analysis was completed, currently in debug so stuff is out to console rn.")
+                } else {
+                    message.channel.send("Must provide a proper role mention. Please make sure this role is mentionable (you can make it unmentionable after running this command).")
+                }
+
+            }
+        },
         "gw-start": {
             pretty_name: "gw-start",
             description: "Start a giveaway.",
