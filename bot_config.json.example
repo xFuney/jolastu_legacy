@@ -15,4 +15,6 @@
     "bredo_servermon__intervalSeconds": 5,
     "bredo_servermon__sysop": "1983235073250327508",
     "bredo_servermon__sysop_log_channel": "18214210472107408"
+    "infraction_logging_enabled": true,
+    "infraction_log_channel": "18214210472107408"
 }
