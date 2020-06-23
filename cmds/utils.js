@@ -1,3 +1,5 @@
+const api_db = require("../api/database.js")
+
 module.exports = {
     categoryName: "Utilities",
     categoryDescription: "Utilities that the bot has (including help and ping).",
@@ -7,6 +9,7 @@ module.exports = {
             description: "Ping the bot.",
             command_function: async function(MesgElement, Args, serverQueue, Discord, client, search, ytdl, opts, queue, BOT_CONFIG, commands) {
                 MesgElement.reply("Ping received.")
+                let test = api_db.get("101", "user_warns", {user_id: 10101})
             }
         },
         "help": {
