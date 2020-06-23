@@ -9,7 +9,7 @@ module.exports = {
             description: "Ping the bot.",
             command_function: async function(MesgElement, Args, serverQueue, Discord, client, search, ytdl, opts, queue, BOT_CONFIG, commands) {
                 MesgElement.reply("Ping received.")
-                let test = api_db.get("101", "user_warns", {user_id: 10101})
+                //let test = api_db.get("101", "user_warns", {user_id: 10101})
             }
         },
         "help": {
