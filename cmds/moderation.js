@@ -48,6 +48,23 @@ module.exports = {
                             .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
                     
                         warned.send(warnEmbed);
+
+                       if (BOT_CONFIG.infraction_logging_enabled) {
+
+                           let channel = client.channels.cache.get(BOT_CONFIG.infraction_log_channel)
+
+                           let logEmbed = new Discord.MessageEmbed()
+                               .setColor('ff0000')
+                               .setTitle('Punishment log')
+                               .setAuthor(warned.tag + ' (' + warned.id + ') was kicked by ' + message.author.tag)
+                               .setDescription("Reason for kick: **"+ query +"**")
+                               .setTimestamp()
+                               .setFooter('Brought to you by ' + BOT_CONFIG.bot_name)
+
+                           channel.send(logEmbed)
+
+                       }
+
                         message.mentions.members.first().kick();
                    } else {
                         message.channel.send("You must provide a mention in order to kick a user.");
@@ -87,6 +104,22 @@ module.exports = {
                             .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
                     
                         warned.send(warnEmbed);
+
+                       if (BOT_CONFIG.infraction_logging_enabled) {
+
+                           let channel = client.channels.cache.get(BOT_CONFIG.infraction_log_channel)
+
+                           let logEmbed = new Discord.MessageEmbed()
+                               .setColor('ff0000')
+                               .setTitle('Punishment log')
+                               .setAuthor(warned.tag + ' (' + warned.id + ') was banned by ' + message.author.tag)
+                               .setDescription("Reason for ban: **"+ query +"**")
+                               .setTimestamp()
+                               .setFooter('Brought to you by ' + BOT_CONFIG.bot_name)
+
+                           channel.send(logEmbed)
+
+                       }
                         
                         message.mentions.members.first().ban({reason: "Banned using Jolastu by " + message.author.tag + " with reason: " + query});
                    } else {
@@ -126,6 +159,22 @@ module.exports = {
                             .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
                     
                         warned.send(warnEmbed);
+
+                        if (BOT_CONFIG.infraction_logging_enabled) {
+
+                            let channel = client.channels.cache.get(BOT_CONFIG.infraction_log_channel)
+
+                            let logEmbed = new Discord.MessageEmbed()
+                                .setColor('ff0000')
+                                .setTitle('Punishment log')
+                                .setAuthor(warned.tag + ' (' + warned.id + ') was warned by ' + message.author.tag)
+                                .setDescription("Reason for warn: **"+ query +"**")
+                                .setTimestamp()
+                                .setFooter('Brought to you by ' + BOT_CONFIG.bot_name)
+
+                            channel.send(logEmbed)
+
+                        }
                    } else {
                         message.channel.send("You must provide a mention in order to warn a user.");
                    }
