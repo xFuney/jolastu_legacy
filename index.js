@@ -11,7 +11,7 @@ for (const file of apiDirectory) {
     api[file.split('.').slice(0, -1).join('.')] = require("./api/" + file);
 }
 
-console.log(api);
+//console.log(api);
 
 api.logging.log("APIs have been initialised successfully.");
 
@@ -19,7 +19,7 @@ api.logging.log("APIs have been initialised successfully.");
 
 const BOT_CONFIG = api.configuration.loadConfiguration("./bot_config.json");
 
-console.log(BOT_CONFIG);
+//console.log(BOT_CONFIG);
 
 api.logging.log("Initialising libraries for use...")
 
@@ -85,18 +85,18 @@ if (BOT_CONFIG.bredo_servermon__enable) {
             let currCpuUsage = Math.round(v * 100)
             if (currCpuUsage > cpuThreshold) {
                 if ((!ownerAlerted) && (cpuWarning)) {
-                    console.log('[MON] High CPU usage has lasted over ' + intervalSeconds + 'seconds, alerting owner')
+                    //console.log('[MON] High CPU usage has lasted over ' + intervalSeconds + 'seconds, alerting owner')
                     channel.send('<@' + ownerID + '>, CPU usage has been above threshold of ' + cpuThreshold + '% for more then ' + intervalSeconds + 'seconds (currently at ' + currCpuUsage + '%)')
                     ownerAlerted = true
                 } else if (!cpuWarning && !ownerAlerted) {
-                    console.log('[MON] High CPU usage detected')
+                    //console.log('[MON] High CPU usage detected')
                     cpuWarning = true
                 } else {
-                    console.log('[MON] CPU usage is still high, owner has been alerted')
+                    //console.log('[MON] CPU usage is still high, owner has been alerted')
                 }
             } else {
                 if (cpuWarning || ownerAlerted) {
-                    console.log('[MON] CPU usage has returned to normal')
+                    //console.log('[MON] CPU usage has returned to normal')
                     cpuWarning = false
                     ownerAlerted = false
                 }
@@ -115,37 +115,37 @@ const YTDL_OPTS = {
 // Set appropriate tokens variable based on config.
 const DISCORD_TOKEN = process.env.JOLASTU_PROD_DISCORD_TOKEN;
 
-console.log("Currently using development token");
+//console.log("Currently using development token");
 
 if (BOT_CONFIG.bot_env == "prod") {
     const DISCORD_TOKEN = process.env.JOLASTU_PROD_DISCORD_TOKEN;
-    console.log("Using production token.")
+    //console.log("Using production token.")
 } 
 
-//console.log(commands)
+////console.log(commands)
 
 client.on('message', msg => {
     // Regardless if this message is meant for us or not, run it through the antispam.
-    console.log("[MSG] Received message - running through antispam system.")
+    //console.log("[MSG] Received message - running through antispam system.")
     //antiSpam.message(msg);
 
-    console.log("[MSG] Checking if this message was meant for us.")
+    //console.log("[MSG] Checking if this message was meant for us.")
     // Efficiency measure, make sure command is meant for us before even bothering to look.
     if (msg.content.substring(0,BOT_CONFIG.bot_prefix.length) == BOT_CONFIG.bot_prefix) {
-        console.log("[CMD] Message was intended for us, we can start parsing now.")
+        //console.log("[CMD] Message was intended for us, we can start parsing now.")
         // Remove the prefix from the command to ensure we can split arguments.
-        console.log("[CMD] Removing prefix to ensure argument split.")
+        //console.log("[CMD] Removing prefix to ensure argument split.")
         var ParsedMessage = msg.content.substring(BOT_CONFIG.bot_prefix.length, msg.content.length - BOT_CONFIG.bot_prefix.length + 2)
-        console.log("[CMD] ParsedMessage variable is currently " + ParsedMessage)
+        //console.log("[CMD] ParsedMessage variable is currently " + ParsedMessage)
         // Split by spacebar, as that is our argument delimiter.
-        console.log("[CMD] Splitting parsed message to extract arguments.")
+        //console.log("[CMD] Splitting parsed message to extract arguments.")
         var Arguments = ParsedMessage.split(" ")
-        console.log(Arguments)
+        //console.log(Arguments)
         
         // We know that this is intended for us, so fully parse now.
-        console.log("[CMD] Starting full parse to run command...")
+        //console.log("[CMD] Starting full parse to run command...")
         var i;
-        console.log(commands)
+        //console.log(commands)
         for (const catName in commands) {
             // So we're now getting category names, we can now refer to category objects!
             for (const commandName in commands[catName].commands) {
@@ -153,7 +153,7 @@ client.on('message', msg => {
 
                 if (Arguments[0] == commandName) {
                     // Execute
-                    console.log("[CMD] Executing...");
+                    //console.log("[CMD] Executing...");
                     currentCmd.command_function(msg, Arguments, queue.get(msg.guild.id), Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands, ms)
                 }
             }

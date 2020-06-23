@@ -3,3 +3,7 @@
 node_modules
 bot_config.json
 giveaways.json
+/nbproject/private/
+/nbproject/*
+nbproject
+db/*

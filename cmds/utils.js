@@ -1,3 +1,5 @@
+
+
 module.exports = {
     categoryName: "Utilities",
     categoryDescription: "Utilities that the bot has (including help and ping).",
@@ -7,6 +9,7 @@ module.exports = {
             description: "Ping the bot.",
             command_function: async function(MesgElement, Args, serverQueue, Discord, client, search, ytdl, opts, queue, BOT_CONFIG, commands) {
                 MesgElement.reply("Ping received.")
+                //let test = api_db.get("101", "user_warns", {user_id: 10101})
             }
         },
         "help": {
@@ -51,13 +54,13 @@ module.exports = {
                     .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
                 
                 for (const catName in commands) {
-                    console.log(catName)
+                    //console.log(catName)
                     if (catName == Args[1]) {
                         // This is the category we seek.
-                        console.log("found")
+                        //console.log("found")
                         var i;
                         for (const commandName in commands[catName].commands) {
-                            console.log(commandName)
+                            //console.log(commandName)
                             exampleEmbed.addField(BOT_CONFIG.bot_prefix + commands[catName].commands[commandName].pretty_name, commands[catName].commands[commandName].description, false)
                         }
                     }

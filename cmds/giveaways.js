@@ -14,24 +14,30 @@ module.exports = {
         "gw-randomping": {
             pretty_name: "gw-randomping",
             description: "Get a random ping from a list of roles, given an ID.",
-            command_function: function (message, args, serverQueue, Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands, ms) {
+            command_function: async function (message, args, serverQueue, Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands, ms) {
                 // Random ping
 
-                //if (args[2] === undefined) { 
-                    //message.channel.send("Must specify number of winners.")
-                    //return
-                //}
+                if (args[2] === undefined) { 
+                    message.channel.send("Must specify number of winners.")
+                    return
+                }
 
-                console.log("Ran.")
+                if (!message.member.hasPermission('ADMINISTRATOR')) {
+                    message.channel.send("Must be a server administrator to use this command (preventing against spam pinging)")
+                    return
+                }
 
-                if ( message.mentions.roles.first() ) {
+                //console.log("Ran.")
+
+                if ( args[1] !== undefined ) {
                     // We have a role mention.
-                    console.log("In.")
-                    var sentMessage = message.channel.send("**Analysing...**")
+                    //console.log("In.")
+                    var sentMessage = await message.channel.send("**Analysing...**")
 
-                    var MemberObject = message.mentions.roles.first().members
+                    //var guild = await message.guild.fetchMembers();
+                    var MemberObject = message.guild.roles.cache.get(args[1]).members
                     
-                    //console.log(MemberObject)
+                    // console.log( MemberObject )
                     var ArrayNum = 0;
                     var ArrayRar = []
 
@@ -43,24 +49,24 @@ module.exports = {
                     
                     var ArrayWinners = [];
                     
-                    console.log(ArrayRar)
+                    //console.log(ArrayRar)
                     var NumberOfWinners = parseInt(args[2]);
                     var CollectedWinners = 0;
                     while ( CollectedWinners !== NumberOfWinners ) {
-                        console.log("In while loop")
+                        //console.log("In while loop")
                         let selectedUser = ArrayRar[module.exports.functions.random(0,ArrayNum)]
 
                         if (!ArrayWinners.includes(selectedUser)) {
                             ArrayWinners[CollectedWinners] = selectedUser
-                            console.log(ArrayWinners[CollectedWinners])
+                            //console.log(ArrayWinners[CollectedWinners])
                             CollectedWinners++;
-                            console.log("User selected")
+                            //console.log("User selected")
                         } else {
-                            console.log("Duplicate user found, skipping")
+                            //console.log("Duplicate user found, skipping")
                         }
 
                         if (CollectedWinners >= NumberOfWinners) {
-                            console.log('winners collected')
+                            //console.log('winners collected')
                             break;
                         }
                     }
@@ -74,7 +80,7 @@ module.exports = {
 
                     message.channel.send(Finalmsg)
                     
-                    message.channel.send("Analysis was completed, currently in debug so stuff is out to console rn.")
+                    sentMessage.edit("Analysis completed.")
                 } else {
                     message.channel.send("Must provide a proper role mention. Please make sure this role is mentionable (you can make it unmentionable after running this command).")
                 }
@@ -86,7 +92,12 @@ module.exports = {
             description: "Start a giveaway.",
             command_function: function (message, args, serverQueue, Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands, ms) {
                 const gArgs = message.content.slice(BOT_CONFIG.bot_prefix.length).trim().split(/ +/g)
-                if (message.author.id == message.guild.ownerID) {
+                if (!message.member.hasPermission('ADMINISTRATOR')) {
+                    message.channel.send("Must be a server administrator to use this command (preventing against spam pinging)")
+                    return
+                }
+                // horrible way to bypass owner check
+                if (true) {
                     client.giveawaysManager.start(message.channel, {
                         time: ms(args[1]),
                         prize: args.slice(3).join(" "),
@@ -111,7 +122,7 @@ module.exports = {
                             }
                         }
                     }).then((gData) => {
-                        console.log(gData); // {...} (messageid, end date and more)
+                        //console.log(gData); // {...} (messageid, end date and more)
                     });
                 }
     
@@ -123,8 +134,12 @@ module.exports = {
             description: "Reroll a giveaway.",
             command_function: function (message, args, serverQueue, results, ytdl, queue, Discord, client, BOT_CONFIG) {
                 let messageID = args[1];
+                if (!message.member.hasPermission('ADMINISTRATOR')) {
+                    message.channel.send("Must be a server administrator to use this command (preventing against spam pinging)")
+                    return
+                }
 
-                if (message.author.id == message.guild.ownerID) {
+                if (true) {
                     client.giveawaysManager.reroll(messageID).then(() => {
                         message.channel.send("Success! Giveaway rerolled!");
                     }).catch((err) => {
@@ -138,8 +153,12 @@ module.exports = {
             description: "Deletes a giveway.",
             command_function: function (message, args, serverQueue, results, ytdl, queue, Discord, client, BOT_CONFIG) {
                 let messageID = args[1];
+                if (!message.member.hasPermission('ADMINISTRATOR')) {
+                    message.channel.send("Must be a server administrator to use this command (preventing against spam pinging)")
+                    return
+                }
 
-                if (message.author.id == message.guild.ownerID) {
+                if (true) {
                     client.giveawaysManager.delete(messageID).then(() => {
                         message.channel.send("Success! Giveaway deleted!");
                     }).catch((err) => {
