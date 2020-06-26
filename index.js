@@ -70,6 +70,7 @@ for (const file of commandsDirectory) {
 // CPU Monitoring
 if (BOT_CONFIG.bredo_servermon__enable) {
     const os = require('os-utils');
+    const {exec} = require('child_process');
 
     const cpuThreshold = BOT_CONFIG.bredo_servermon__cpuThreshold
     const intervalSeconds =  BOT_CONFIG.bredo_servermon__intervalSeconds
@@ -85,7 +86,21 @@ if (BOT_CONFIG.bredo_servermon__enable) {
             let currCpuUsage = Math.round(v * 100)
             if (currCpuUsage > cpuThreshold) {
                 if ((!ownerAlerted) && (cpuWarning)) {
-                    //console.log('[MON] High CPU usage has lasted over ' + intervalSeconds + 'seconds, alerting owner')
+
+                    console.log('[MON] High CPU usage lasting over ${intervalSeconds} seconds has been detected. Info:')
+
+                    exec("ps aux --sort=-pcpu | head -n 5", (error, stdout, stderr) => {
+                        if (error) {
+                            console.log(`error: ${error.message}`);
+                            return;
+                        }
+                        if (stderr) {
+                            console.log(`stderr: ${stderr}`);
+                            return;
+                        }
+                        console.log(stdout);
+                    });
+
                     channel.send('<@' + ownerID + '>, CPU usage has been above threshold of ' + cpuThreshold + '% for more then ' + intervalSeconds + 'seconds (currently at ' + currCpuUsage + '%)')
                     ownerAlerted = true
                 } else if (!cpuWarning && !ownerAlerted) {
