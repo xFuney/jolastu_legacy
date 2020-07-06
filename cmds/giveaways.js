@@ -1,5 +1,8 @@
 //(msg, Arguments, queue.get(msg.guild.id), Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands)
 
+const csv = require('csv-parser');
+const fs = require('fs');
+
 module.exports = {
     categoryName: "Giveaways",
     categoryDescription: "Use the bot to do giveaways!",
@@ -86,6 +89,125 @@ module.exports = {
                 }
 
             }
+        },
+        "gw-randomping-csv": {
+            pretty_name: "gw-randomping-csv",
+            description: "Get a random ping from a list of roles, given an ID. Send each winner a DM containing content of a CSV file.",
+            command_function: async function (message, args, serverQueue, Discord, client, search, ytdl, YTDL_OPTS, queue, BOT_CONFIG, commands, ms) {
+                // Random ping
+
+                if (args[2] === undefined) { 
+                    message.channel.send("Must specify number of winners.")
+                    return
+                }
+                
+                if (args[3] === undefined) { 
+                    message.channel.send("Must specify a CSV file.")
+                    return
+                }
+                
+                if (args[4] === undefined ) {
+                    message.channel.send("Must specify a giveaway name.")
+                    return
+                }
+                
+                if (!message.member.hasPermission('ADMINISTRATOR')) {
+                    message.channel.send("Must be a server administrator to use this command (preventing against spam pinging)")
+                    return
+                }
+
+                //console.log("Ran.")
+
+                if ( args[1] !== undefined ) {
+                    // We have a role mention.
+                    //console.log("In.")
+                    var sentMessage = await message.channel.send("**Analysing...**")
+
+                    //var guild = await message.guild.fetchMembers();
+                    //console.log(args)
+                    //console.log(message.guild.roles.cache.get(args[1]))
+                    var MemberObject = message.guild.roles.cache.get(args[1]).members
+                    
+                    console.log(MemberObject)
+                    
+                    // console.log( MemberObject )
+                    var ArrayNum = 0;
+                    var ArrayRar = []
+
+                    MemberObject.forEach(function(test) {
+                        ArrayRar[ArrayNum] = test.user.id;
+
+                        ArrayNum++;
+                    })
+                    
+                    var ArrayWinners = [];
+                    
+                    //console.log(ArrayRar)
+                    var NumberOfWinners = parseInt(args[2]);
+                    var CollectedWinners = 0;
+                    while ( CollectedWinners !== NumberOfWinners ) {
+                        //console.log("In while loop")
+                        let selectedUser = ArrayRar[module.exports.functions.random(0,ArrayNum)]
+
+                        if (!ArrayWinners.includes(selectedUser)) {
+                            ArrayWinners[CollectedWinners] = selectedUser
+                            //console.log(ArrayWinners[CollectedWinners])
+                            CollectedWinners++;
+                            //console.log("User selected")
+                        } else {
+                            //console.log("Duplicate user found, skipping")
+                        }
+
+                        if (CollectedWinners >= NumberOfWinners) {
+                            //console.log('winners collected')
+                            break;
+                        }
+                    }
+                    
+                    var ResultArray = [];
+                    var i = 0;
+                    fs.createReadStream("./csv/" + args[3])
+                        .pipe(csv())
+                        .on('data', (row) => {
+                            ResultArray[i] = row.CODE
+                            i++;
+                        })
+                        .on('end', () => {
+                            //console.log('CSV file successfully processed');
+                            //console.log(ResultArray)
+                            
+                            var Finalmsg = ""
+                            var k = 0;
+                            ArrayWinners.forEach(function(winnerID) {
+                                Finalmsg += ("<@" + winnerID + "> ")
+                                client.users.fetch(winnerID)
+                                    .then( (userObj) => {
+                                        userObj.send("Congratulations on winning " + message.guild.name + "'s **" + args.slice(4).join(" ") + "** giveaway! Your code is: " + ResultArray[k] + ".")
+                                        k++;
+                                    });
+                                    
+                                
+                    
+                                
+                            })
+                            
+                            message.channel.send(Finalmsg)
+                            sentMessage.edit("Analysis completed.")
+                        });
+                        
+
+                    
+                    
+
+                    //var RandomAnalysis = ArrayRar[module.exports.functions.random(0,ArrayNum)]
+
+              
+                } else {
+                    message.channel.send("Must provide a proper role mention. Please make sure this role is mentionable (you can make it unmentionable after running this command).")
+                }
+
+            }
+        
         },
         "gw-start": {
             pretty_name: "gw-start",
