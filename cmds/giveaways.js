@@ -128,7 +128,7 @@ module.exports = {
                     //console.log(message.guild.roles.cache.get(args[1]))
                     var MemberObject = message.guild.roles.cache.get(args[1]).members
                     
-                    console.log(MemberObject)
+                    //console.log(MemberObject)
                     
                     // console.log( MemberObject )
                     var ArrayNum = 0;
@@ -178,11 +178,17 @@ module.exports = {
                             
                             var Finalmsg = ""
                             var k = 0;
+                            console.log("CSV parsed, sending codes. No output from a user means success.")
                             ArrayWinners.forEach(function(winnerID) {
                                 Finalmsg += ("<@" + winnerID + "> ")
                                 client.users.fetch(winnerID)
                                     .then( (userObj) => {
+                                        process.stdout.write("Sending " + userObj.tag + " code " + ResultArray[k] + "... ")
                                         userObj.send("Congratulations on winning " + message.guild.name + "'s **" + args.slice(4).join(" ") + "** giveaway! Your code is: " + ResultArray[k] + ".")
+                                        .catch( (error) => {
+                                            process.stdout.write("FAILED!")
+                                        })
+                                        process.stdout.write("\n")
                                         k++;
                                     });
                                     
