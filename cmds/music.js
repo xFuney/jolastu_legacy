@@ -427,19 +427,41 @@ module.exports = {
                     return false
                 }
     
-                if (message.member.roles.cache.some(role => role.name === 'DJ') || message.member.id == message.guild.ownerID ) {
+                if (message.member.roles.cache.some(role => role.name === 'DJ') || message.member.id === message.guild.ownerID || message.author.tag === serverQueue.songs[0].requester) {
                     serverQueue.connection.dispatcher.end();
                 } else {
-                    const exampleEmbed = new Discord.MessageEmbed()
-                        .setColor('ff0000')
-                        .setTitle("Cannot skip!")
-                        .setAuthor('Fatal Exception', BOT_CONFIG.bot_image)
-                        .setDescription("You don't have the DJ Role")
-                        .setTimestamp()
-                        .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
-                    
+                    if (BOT_CONFIG.voteskip_enabled) { // checking if voteskip is enabled
+                        if (votedToSkip.includes(message.member.id)) {
+                            return false
+                        } else {
+                            votedToSkip.push(message.member.id) // adding member
+                            const exampleEmbed = new Discord.MessageEmbed()
+                                .setColor('7289da')
+                                .setTitle('Voted to skip')
+                                .setAuthor('Successfully voted to skip', BOT_CONFIG.bot_image)
+                                .setDescription(message.author.tag + ' has voted to skip')
+                                .setTimestamp()
+                                .setFooter('Bought to you by ' + BOT_CONFIG.bot_name)
+                            message.channel.send(exampleEmbed)
+                            let membersToSkip = (message.member.voice.channel.members.size - 1) / 2
+                            console.log(membersToSkip)
+                            if (votedToSkip.length >= membersToSkip) { // if half members (minus the bot) want to skip
+                                serverQueue.connection.dispatcher.end();
+                                // TODO: reset array on song skip (will also need to reset when a new song is played)
+                            }
+                        }
+                    } else {
+                        const exampleEmbed = new Discord.MessageEmbed()
+                            .setColor('ff0000')
+                            .setTitle("Cannot skip!")
+                            .setAuthor('Fatal Exception', BOT_CONFIG.bot_image)
+                            .setDescription("You don't have the DJ Role")
+                            .setTimestamp()
+                            .setFooter('Brought to you by ' + BOT_CONFIG.bot_name);
+
                         message.channel.send(exampleEmbed)
-                        return false	
+                        return false
+                    }
                 }
             }
         }           

@@ -51,6 +51,8 @@ const manager = new GiveawaysManager(client, {
 // We now have a giveawaysManager property to access the manager everywhere!
 client.giveawaysManager = manager;
 
+votedToSkip = []
+
 api.logging.log("Initialising commands...")
 
 const commandsDirectory = fs.readdirSync('./cmds').filter(file => file.endsWith('.js'));
@@ -64,6 +66,8 @@ for (const file of commandsDirectory) {
         commands[file.split('.').slice(0, -1).join('.')].initTasks();
     }
 }
+
+
 
 // MONITORING
 
