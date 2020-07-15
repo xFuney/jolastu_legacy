@@ -150,6 +150,8 @@ module.exports = {
             //console.log("[AUD] [PLAY] Playing song for guild ID " + guild.id)
             //console.log("[AUD] [PLAY] Getting queue.")
             const serverQueue = queue.get(guild.id);
+
+            votedToSkip.splice(0, votedToSkip.length) // resetting voteskip
         
             // This statement checks if there are no songs left and that the user wants the bot to leave the call after it has finished music.
             if (!song) {
@@ -279,6 +281,9 @@ module.exports = {
                 if (songQueue.length > 1) {
                     for (i = 1; i < songQueue.length; i++) {
                         currentDesc = currentDesc + "**" + i + ".** " + "_ [" + serverQueue.songs[i].title + "](" + serverQueue.songs[i].url + "), requested by " + serverQueue.songs[i].requester + ". _\n"
+                        if (i >= 8) { // ok i know this is janky
+                            break;
+                        }
                     }
                 } else {
                     currentDesc = "_No songs in queue._"
@@ -429,25 +434,25 @@ module.exports = {
     
                 if (message.member.roles.cache.some(role => role.name === 'DJ') || message.member.id === message.guild.ownerID || message.author.tag === serverQueue.songs[0].requester) {
                     serverQueue.connection.dispatcher.end();
+                    votedToSkip.splice(0, votedToSkip.length)
                 } else {
                     if (BOT_CONFIG.voteskip_enabled) { // checking if voteskip is enabled
                         if (votedToSkip.includes(message.member.id)) {
                             return false
                         } else {
+                            let membersToSkip = Math.round((message.member.voice.channel.members.size - 1) / 2)
                             votedToSkip.push(message.member.id) // adding member
                             const exampleEmbed = new Discord.MessageEmbed()
                                 .setColor('7289da')
                                 .setTitle('Voted to skip')
                                 .setAuthor('Successfully voted to skip', BOT_CONFIG.bot_image)
-                                .setDescription(message.author.tag + ' has voted to skip')
+                                .setDescription(message.author.tag + ' has voted to skip. ' + membersToSkip + ' votes needed to skip, ' + votedToSkip.length + ' voted to skip.')
                                 .setTimestamp()
                                 .setFooter('Bought to you by ' + BOT_CONFIG.bot_name)
                             message.channel.send(exampleEmbed)
-                            let membersToSkip = (message.member.voice.channel.members.size - 1) / 2
-                            console.log(membersToSkip)
                             if (votedToSkip.length >= membersToSkip) { // if half members (minus the bot) want to skip
                                 serverQueue.connection.dispatcher.end();
-                                // TODO: reset array on song skip (will also need to reset when a new song is played)
+                                votedToSkip.splice(0, votedToSkip.length)
                             }
                         }
                     } else {
