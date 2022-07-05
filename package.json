@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/xFuney/jolastu#readme",
   "dependencies": {
-    "@discordjs/opus": "^0.3.2",
+    "@discordjs/opus": "^0.8.0",
     "better-sqlite3": "^7.1.0",
     "csv-parser": "^2.3.3",
     "discord-giveaways": "^4.1.8",
